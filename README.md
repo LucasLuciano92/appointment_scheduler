@@ -1,24 +1,51 @@
-# README
+# Appointment Scheduler
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Backend desarrollado en Ruby on Rails para la gestión de turnos de un salón o centro de estética.
 
-Things you may want to cover:
+## Estado del proyecto
 
-* Ruby version
+Actualmente se encuentra completada la Etapa 1: definición del dominio.
 
-* System dependencies
+## Tecnologías
 
-* Configuration
+- Ruby 3.4.10
+- Ruby on Rails 8.1.3.1
+- SQLite
+- Git
 
-* Database creation
+## Dominio
 
-* Database initialization
+Modelos principales definidos:
 
-* How to run the test suite
+- User
+- StaffMember
+- Service
+- ServiceOffering
+- Availability
+- Appointment
 
-* Services (job queues, cache servers, search engines, etc.)
+La documentación detallada de la Etapa 1 se encuentra en:
 
-* Deployment instructions
+`docs/stage_1_definition.md`
 
-* ...
+## Instalación
+
+Las instrucciones completas de instalación y ejecución se incorporarán a medida que avance el desarrollo.
+
+## Testing
+
+Los tests automatizados se incorporarán durante las próximas etapas.
+
+## API
+
+La API será versionada bajo:
+
+`/api/v1`
+
+Los endpoints serán documentados cuando se implemente la Etapa 4.
+
+## Back-office
+
+El back-office administrativo será implementado bajo el namespace:
+
+`/admin`
