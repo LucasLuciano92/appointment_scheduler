@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title><%= content_for(:title) || "Administración" %> · Agenda</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="admin-shell">
+    <a class="skip-link" href="#main">Ir al contenido</a>
+    <header class="topbar">
+      <%= link_to "Agenda", admin_root_path, class: "brand" %>
+      <span class="brand-caption">Administración del salón</span>
+      <% if current_admin %>
+        <div class="account"><span><%= person_name(current_admin) %></span><%= button_to "Cerrar sesión", admin_session_path, method: :delete, class: "button secondary" %></div>
+      <% end %>
+    </header>
+    <% if current_admin %>
+      <nav class="navigation" aria-label="Administración">
+        <% { "Resumen" => admin_root_path, "Turnos" => admin_appointments_path, "Clientes" => admin_customers_path, "Personal" => admin_staff_members_path, "Servicios" => admin_services_path, "Ofertas" => admin_service_offerings_path, "Disponibilidad" => admin_availabilities_path }.each do |label, path| %>
+          <%= link_to label, path, class: (request.path == path || (path != admin_root_path && request.path.start_with?("#{path}/")) ? "selected" : nil) %>
+        <% end %>
+      </nav>
+    <% end %>
+    <main id="main" class="container">
+      <% flash.each do |type, message| %>
+        <div class="flash <%= type %>" role="<%= type == 'alert' ? 'alert' : 'status' %>"><%= message %></div>
+      <% end %>
+      <%= yield %>
+    </main>
+    <footer class="footer">Agenda del salón · Horarios de <%= Time.zone.name %></footer>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+<nav class="pagination" aria-label="Páginas">
+  <%= link_to "← Anterior", page_path(@page - 1), class: "button secondary" if @page > 1 %>
+  <span>Página <%= @page %></span>
+  <%= link_to "Siguiente →", page_path(@page + 1), class: "button secondary" if @has_next_page %>
+</nav>

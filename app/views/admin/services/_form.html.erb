@@ -1,0 +1,11 @@
+<section class="panel form-panel">
+<%= render "admin/shared/errors", record: @service %>
+<%= form_with model: @service, scope: :service, url: (@service.persisted? ? admin_service_path(@service) : admin_services_path) do |form| %>
+<div class="field"><%= form.label :name, "Nombre" %><%= form.text_field :name, required: true %></div>
+<div class="field"><%= form.label :description, "Descripción" %><%= form.text_area :description, rows: 3 %></div>
+<div class="form-grid"><div class="field"><%= form.label :duration_minutes, "Duración (minutos)" %><%= form.number_field :duration_minutes, required: true, min: 1, step: 1 %></div>
+<div class="field"><%= form.label :price, "Precio (#{Rails.configuration.x.business_currency})" %><%= form.number_field :price, required: true, min: 0, step: "0.01" %></div></div>
+<div class="field checkbox"><%= form.check_box :active %><%= form.label :active, "Activo" %></div>
+<div class="form-actions"><%= form.submit "Guardar", class: "button" %><%= link_to "Cancelar", admin_services_path, class: "button secondary" %></div>
+<% end %>
+</section>

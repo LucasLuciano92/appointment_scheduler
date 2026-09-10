@@ -1,0 +1,13 @@
+<% content_for :title, "Detalle de cliente" %>
+<div class="page-heading"><div><%= link_to "← Clientes", admin_customers_path %><h1>Detalle de cliente</h1></div><%= link_to "Editar", edit_admin_customer_path(@customer), class: "button" %></div>
+<section class="panel detail-panel">
+<%= render "admin/shared/errors", record: @customer %>
+<% record = @customer %>
+<dl class="details"><div><dt>Nombre</dt><dd><%= person_name(record) %></dd></div>
+<div><dt>Email</dt><dd><%= record.email_address %></dd></div>
+<div><dt>Teléfono</dt><dd><%= record.phone.presence || "—" %></dd></div>
+<div><dt>Estado</dt><dd><%= activation_badge(record) %></dd></div>
+
+</dl>
+<%= button_to "Eliminar cliente", admin_customer_path(@customer), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
+</section>

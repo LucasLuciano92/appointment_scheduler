@@ -1,0 +1,19 @@
+en:
+  errors:
+    messages:
+      booked_offering: cannot change the staff member or service of a booked offering
+      ordered_availability: must be after start time on the same day
+      overlapping_availability: overlaps another active availability
+      ordered_appointment: must be after start time
+      initial_status: must initially be scheduled
+      invalid_transition: cannot change from its current state
+      premature_completion: cannot be completed before the appointment ends
+      reschedule_scheduled: only scheduled appointments can be rescheduled
+      active_customer: must be an active customer
+      active_offering: must have an active offering, staff member and service
+      future_start: must be in the future
+      matching_duration: must match the service duration
+      within_availability: must fit within one active availability
+      overlapping_appointment: overlaps another scheduled appointment
+      preserve_appointment: appointments must be cancelled, not deleted
+      booking_busy: Another operation is updating the schedule. Please try again shortly.

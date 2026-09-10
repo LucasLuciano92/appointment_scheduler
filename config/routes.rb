@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  root to: redirect("/admin")
+
+  namespace :admin do
+    root "dashboard#show"
+    resource :session, only: %i[new create destroy]
+    resources :services
+    resources :staff_members
+    resources :service_offerings
+    resources :availabilities
+    resources :customers
+    resources :appointments, except: :destroy do
+      member do
+        patch :cancel
+        patch :complete
+      end
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

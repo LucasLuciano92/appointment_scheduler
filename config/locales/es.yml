@@ -1,0 +1,113 @@
+es:
+  appointment_statuses:
+    scheduled: Confirmado
+    cancelled: Cancelado
+    completed: Completado
+  weekdays:
+    sunday: Domingo
+    monday: Lunes
+    tuesday: Martes
+    wednesday: Miércoles
+    thursday: Jueves
+    friday: Viernes
+    saturday: Sábado
+  helpers:
+    select:
+      prompt: Elegí una opción
+  number:
+    format:
+      separator: ","
+      delimiter: "."
+      precision: 3
+      significant: false
+      strip_insignificant_zeros: false
+    currency:
+      format:
+        format: "%u%n"
+        negative_format: "-%u%n"
+        unit: "$"
+        separator: ","
+        delimiter: "."
+        precision: 2
+        significant: false
+        strip_insignificant_zeros: false
+  activerecord:
+    models:
+      user: Cliente
+      staff_member: Profesional
+      service: Servicio
+      service_offering: Oferta
+      availability: Disponibilidad
+      appointment: Turno
+    attributes:
+      user:
+        first_name: Nombre
+        last_name: Apellido
+        email_address: Email
+        phone: Teléfono
+        password: Contraseña
+        password_confirmation: Confirmación de contraseña
+        active: Activo
+        role: Rol
+      staff_member:
+        first_name: Nombre
+        last_name: Apellido
+        email_address: Email
+        active: Activo
+      service:
+        name: Nombre
+        duration_minutes: Duración
+        price: Precio
+        active: Activo
+      service_offering:
+        staff_member: Profesional
+        service: Servicio
+        service_id: Servicio
+        active: Activo
+      availability:
+        staff_member: Profesional
+        day_of_week: Día
+        start_time: Inicio
+        end_time: Fin
+        active: Activo
+      appointment:
+        customer: Cliente
+        service_offering: Oferta
+        starts_at: Inicio
+        ends_at: Fin
+        status: Estado
+  errors:
+    format: "%{attribute}: %{message}"
+    messages:
+      blank: es obligatorio
+      required: es obligatorio
+      invalid: no es válido
+      taken: ya está en uso
+      inclusion: no está incluido entre los valores permitidos
+      not_a_number: debe ser un número
+      not_an_integer: debe ser un número entero
+      greater_than: "debe ser mayor que %{count}"
+      greater_than_or_equal_to: "debe ser mayor o igual que %{count}"
+      too_short: "debe tener al menos %{count} caracteres"
+      too_long: "debe tener como máximo %{count} caracteres"
+      password_too_long: es demasiado larga
+      confirmation: no coincide
+      restrict_dependent_destroy:
+        has_many: no se puede eliminar porque tiene registros relacionados
+        has_one: no se puede eliminar porque tiene un registro relacionado
+      booked_offering: No se puede cambiar el profesional o servicio de una oferta con turnos.
+      ordered_availability: debe ser posterior al inicio dentro del mismo día
+      overlapping_availability: La franja se superpone con otra disponibilidad activa.
+      ordered_appointment: debe ser posterior al inicio
+      initial_status: debe comenzar como confirmado
+      invalid_transition: no puede cambiar desde su estado actual
+      premature_completion: no se puede completar antes de que termine el turno
+      reschedule_scheduled: Solo se pueden reprogramar turnos confirmados.
+      active_customer: debe ser un cliente activo
+      active_offering: debe tener oferta, profesional y servicio activos
+      future_start: debe estar en el futuro
+      matching_duration: debe coincidir con la duración del servicio
+      within_availability: El turno debe quedar dentro de una única franja activa de atención.
+      overlapping_appointment: El horario se superpone con otro turno confirmado del profesional.
+      preserve_appointment: Los turnos se cancelan; no se eliminan.
+      booking_busy: Otra operación está actualizando la agenda. Volvé a intentar en unos segundos.

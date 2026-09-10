@@ -1,0 +1,11 @@
+<% content_for :title, "Servicios" %>
+<div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Servicios</h1></div><%= link_to "Agregar servicio", new_admin_service_path, class: "button" %></div>
+<div class="panel">
+<% if @services.empty? %>
+  <p class="empty-state">Todavía no hay registros en esta página. Usá “Agregar servicio” para comenzar.</p>
+<% else %>
+  <div class="table-scroll"><table><thead><tr><th scope="col">Nombre</th><th scope="col">Duración</th><th scope="col">Precio</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+  <tbody><% @services.each do |record| %><tr><td><%= record.name %></td><td><%=  "#{record.duration_minutes} min"  %></td><td><%= number_to_currency(record.price, unit: "#{Rails.configuration.x.business_currency} ") %></td><td><%= activation_badge(record) %></td><td class="row-actions"><%= link_to "Ver", admin_service_path(record) %><%= link_to "Editar", edit_admin_service_path(record) %></td></tr><% end %></tbody></table></div>
+<% end %>
+</div>
+<%= render "admin/shared/pagination" %>

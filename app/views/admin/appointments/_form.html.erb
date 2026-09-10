@@ -1,0 +1,15 @@
+<section class="panel form-panel">
+  <%= render "admin/shared/errors", record: @appointment %>
+  <% if @appointment.new_record? && (@customers.empty? || @offerings.empty?) %>
+    <div class="flash alert">Para reservar, necesitás un cliente activo y una oferta activa con personal, servicio y disponibilidad cargados. Usá el menú para completar esos datos.</div>
+  <% end %>
+  <%= form_with model: [ :admin, @appointment ] do |form| %>
+    <% if @appointment.new_record? || @appointment.scheduled? %>
+      <div class="field"><%= form.label :customer_id, "Cliente" %><%= form.select :customer_id, @customers.map { |customer| [ "#{person_name(customer)} · #{customer.email_address}", customer.id ] }, { prompt: "Elegí un cliente" }, required: true %></div>
+      <div class="field"><%= form.label :service_offering_id, "Profesional y servicio" %><%= form.select :service_offering_id, @offerings.map { |offering| [ offering_name(offering), offering.id ] }, { prompt: "Elegí una oferta" }, required: true %></div>
+      <div class="field"><%= form.label :starts_at, "Fecha y hora de inicio" %><%= form.datetime_local_field :starts_at, required: true %><small>Horario local del salón. El fin se calcula según la duración del servicio.</small></div>
+    <% end %>
+    <div class="field"><%= form.label :notes, "Notas (opcional)" %><%= form.text_area :notes, rows: 4 %></div>
+    <div class="form-actions"><%= form.submit "Guardar turno", class: "button" %><%= link_to "Volver", admin_appointments_path, class: "button secondary" %></div>
+  <% end %>
+</section>

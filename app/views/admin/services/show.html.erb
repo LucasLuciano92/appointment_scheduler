@@ -1,0 +1,13 @@
+<% content_for :title, "Detalle de servicio" %>
+<div class="page-heading"><div><%= link_to "← Servicios", admin_services_path %><h1>Detalle de servicio</h1></div><%= link_to "Editar", edit_admin_service_path(@service), class: "button" %></div>
+<section class="panel detail-panel">
+<%= render "admin/shared/errors", record: @service %>
+<% record = @service %>
+<dl class="details"><div><dt>Nombre</dt><dd><%= record.name %></dd></div>
+<div><dt>Duración</dt><dd><%=  "#{record.duration_minutes} min"  %></dd></div>
+<div><dt>Precio</dt><dd><%= number_to_currency(record.price, unit: "#{Rails.configuration.x.business_currency} ") %></dd></div>
+<div><dt>Estado</dt><dd><%= activation_badge(record) %></dd></div>
+<div><dt>Descripción</dt><dd><%= simple_format(@service.description.presence || "Sin descripción.") %></dd></div>
+</dl>
+<%= button_to "Eliminar servicio", admin_service_path(@service), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
+</section>

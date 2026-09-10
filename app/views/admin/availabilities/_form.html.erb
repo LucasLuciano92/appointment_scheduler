@@ -1,0 +1,12 @@
+<section class="panel form-panel">
+<%= render "admin/shared/errors", record: @availability %>
+<%= form_with model: @availability, scope: :availability, url: (@availability.persisted? ? admin_availability_path(@availability) : admin_availabilities_path) do |form| %>
+<p class="muted">Horario semanal de atención. Cada franja debe comenzar y terminar el mismo día.</p>
+<div class="field"><%= form.label :staff_member_id, "Profesional" %><%= form.select :staff_member_id, @staff_members.map { |staff| [ person_name(staff), staff.id ] }, { prompt: "Elegí un profesional" }, required: true %></div>
+<div class="field"><%= form.label :day_of_week, "Día de la semana" %><%= form.select :day_of_week, Availability.day_of_weeks.keys.rotate(1).map { |day| [ I18n.t("weekdays.#{day}"), day ] }, { prompt: "Elegí un día" }, required: true %></div>
+<div class="form-grid"><div class="field"><%= form.label :start_time, "Desde" %><%= form.time_field :start_time, required: true %></div>
+<div class="field"><%= form.label :end_time, "Hasta" %><%= form.time_field :end_time, required: true %></div></div>
+<div class="field checkbox"><%= form.check_box :active %><%= form.label :active, "Activo" %></div>
+<div class="form-actions"><%= form.submit "Guardar", class: "button" %><%= link_to "Cancelar", admin_availabilities_path, class: "button secondary" %></div>
+<% end %>
+</section>
