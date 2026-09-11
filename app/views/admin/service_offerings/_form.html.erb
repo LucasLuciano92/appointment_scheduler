@@ -1,10 +1,22 @@
 <section class="panel form-panel">
-<%= render "admin/shared/errors", record: @service_offering %>
-<%= form_with model: @service_offering, scope: :service_offering, url: (@service_offering.persisted? ? admin_service_offering_path(@service_offering) : admin_service_offerings_path) do |form| %>
-<p class="muted">Asigná qué servicio puede realizar cada profesional. Una oferta con turnos conserva esa asignación.</p>
-<div class="field"><%= form.label :staff_member_id, "Profesional" %><%= form.select :staff_member_id, @staff_members.map { |staff| [ person_name(staff), staff.id ] }, { prompt: "Elegí un profesional" }, required: true, disabled: @service_offering.persisted? && @service_offering.appointments.exists? %></div>
-<div class="field"><%= form.label :service_id, "Servicio" %><%= form.collection_select :service_id, @services, :id, :name, { prompt: "Elegí un servicio" }, required: true, disabled: @service_offering.persisted? && @service_offering.appointments.exists? %></div>
-<div class="field checkbox"><%= form.check_box :active %><%= form.label :active, "Activo" %></div>
-<div class="form-actions"><%= form.submit "Guardar", class: "button" %><%= link_to "Cancelar", admin_service_offerings_path, class: "button secondary" %></div>
-<% end %>
+  <%= render "admin/shared/errors", record: @service_offering %>
+  <%= form_with model: @service_offering, scope: :service_offering, url: (@service_offering.persisted? ? admin_service_offering_path(@service_offering) : admin_service_offerings_path) do |form| %>
+    <p class="muted">Asigná qué servicio puede realizar cada profesional. Una oferta con turnos conserva esa asignación.</p>
+    <div class="field">
+      <%= form.label :staff_member_id, "Profesional" %>
+      <%= form.select :staff_member_id, @staff_members.map { |staff| [ person_name(staff), staff.id ] }, { prompt: "Elegí un profesional" }, required: true, disabled: @service_offering.persisted? && @service_offering.appointments.exists? %>
+    </div>
+    <div class="field">
+      <%= form.label :service_id, "Servicio" %>
+      <%= form.collection_select :service_id, @services, :id, :name, { prompt: "Elegí un servicio" }, required: true, disabled: @service_offering.persisted? && @service_offering.appointments.exists? %>
+    </div>
+    <div class="field checkbox">
+      <%= form.check_box :active %>
+      <%= form.label :active, "Activo" %>
+    </div>
+    <div class="form-actions">
+      <%= form.submit "Guardar", class: "button" %>
+      <%= link_to "Cancelar", admin_service_offerings_path, class: "button secondary" %>
+    </div>
+  <% end %>
 </section>

@@ -4,8 +4,14 @@
   <h1>Todo listo para un nuevo día.</h1>
   <p class="muted">Ingresá con tu cuenta administradora para organizar los turnos del salón.</p>
   <%= form_with url: admin_session_path, scope: :session do |form| %>
-    <div class="field"><%= form.label :email_address, "Email" %><%= form.email_field :email_address, required: true, autocomplete: "username", autofocus: true %></div>
-    <div class="field"><%= form.label :password, "Contraseña" %><%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %></div>
+    <div class="field">
+      <%= form.label :email_address, "Email" %>
+      <%= form.email_field :email_address, required: true, autocomplete: "username", autofocus: true %>
+    </div>
+    <div class="field">
+      <%= form.label :password, "Contraseña" %>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
+    </div>
     <%= form.submit "Ingresar", class: "button" %>
   <% end %>
 </section>

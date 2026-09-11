@@ -1,5 +1,8 @@
 module Admin
   class BaseController < ApplicationController
+    PAGE_SIZE = 25
+    MAX_PAGE = 1_000_000
+
     layout "admin"
     before_action :require_admin
     before_action :prevent_caching
@@ -33,10 +36,11 @@ module Admin
     end
 
     def paginate(scope)
-      @page = [ params[:page].to_i, 1 ].max
-      records = scope.offset((@page - 1) * 25).limit(26).to_a
-      @has_next_page = records.length > 25
-      records.first(25)
+      requested_page = Integer(params[:page], 10, exception: false)
+      @page = (1..MAX_PAGE).cover?(requested_page) ? requested_page : 1
+      records = scope.offset((@page - 1) * PAGE_SIZE).limit(PAGE_SIZE + 1).to_a
+      @has_next_page = records.length > PAGE_SIZE
+      records.first(PAGE_SIZE)
     end
   end
 end

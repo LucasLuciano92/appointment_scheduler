@@ -4,17 +4,14 @@ module Admin
     before_action :load_choices, only: %i[new create edit update]
 
     def index
-      scope = Appointment.includes(:customer, service_offering: [ :staff_member, :service ]).order(:starts_at, :id)
-      if params[:status].present?
-        raise ArgumentError unless Appointment.statuses.key?(params[:status])
-        scope = scope.where(status: params[:status])
-      end
-      scope = scope.where(starts_at: Date.iso8601(params[:date]).in_time_zone.all_day) if params[:date].present?
-      scope = scope.joins(:service_offering).where(service_offerings: { staff_member_id: params[:staff_member_id] }) if params[:staff_member_id].present?
+      filter = AppointmentFilter.new(
+        date: params[:date], status: params[:status], staff_member_id: params[:staff_member_id]
+      )
+      scope = filter.apply(Appointment.with_booking_details.order(:starts_at, :id))
       @staff_members = StaffMember.order(:last_name, :first_name)
       @appointments = paginate(scope)
-    rescue Date::Error, ArgumentError
-      redirect_to admin_appointments_path, alert: "Revisá la fecha y el estado de los filtros."
+    rescue AppointmentFilter::InvalidFilter
+      redirect_to admin_appointments_path, alert: "Revisá la fecha, el estado y el profesional de los filtros."
     end
 
     def show

@@ -1,14 +1,37 @@
 <% content_for :title, "Turno ##{@appointment.id}" %>
-<div class="page-heading"><div><%= link_to "← Turnos", admin_appointments_path %><h1>Turno #<%= @appointment.id %></h1></div><%= appointment_badge(@appointment) %></div>
+<div class="page-heading">
+  <div>
+    <%= link_to "← Turnos", admin_appointments_path %><h1>Turno #<%= @appointment.id %></h1>
+  </div>
+  <%= appointment_badge(@appointment) %>
+</div>
 <section class="panel detail-panel">
   <%= render "admin/shared/errors", record: @appointment %>
   <dl class="details">
-    <div><dt>Cliente</dt><dd><%= person_name(@appointment.customer) %></dd></div>
-    <div><dt>Servicio</dt><dd><%= @appointment.service.name %></dd></div>
-    <div><dt>Profesional</dt><dd><%= person_name(@appointment.staff_member) %></dd></div>
-    <div><dt>Inicio</dt><dd><%= display_datetime(@appointment.starts_at) %></dd></div>
-    <div><dt>Fin</dt><dd><%= display_datetime(@appointment.ends_at) %></dd></div>
-    <div><dt>Notas</dt><dd><%= simple_format(@appointment.notes.presence || "Sin notas.") %></dd></div>
+    <div>
+      <dt>Cliente</dt>
+      <dd><%= person_name(@appointment.customer) %></dd>
+    </div>
+    <div>
+      <dt>Servicio</dt>
+      <dd><%= @appointment.service.name %></dd>
+    </div>
+    <div>
+      <dt>Profesional</dt>
+      <dd><%= person_name(@appointment.staff_member) %></dd>
+    </div>
+    <div>
+      <dt>Inicio</dt>
+      <dd><%= display_datetime(@appointment.starts_at) %></dd>
+    </div>
+    <div>
+      <dt>Fin</dt>
+      <dd><%= display_datetime(@appointment.ends_at) %></dd>
+    </div>
+    <div>
+      <dt>Notas</dt>
+      <dd><%= simple_format(@appointment.notes.presence || "Sin notas.") %></dd>
+    </div>
   </dl>
   <div class="form-actions">
     <%= link_to (@appointment.scheduled? ? "Editar / reprogramar" : "Editar notas"), edit_admin_appointment_path(@appointment), class: "button secondary" %>

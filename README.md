@@ -1,95 +1,91 @@
 # Appointment Scheduler
 
-Backend desarrollado en Ruby on Rails para la gestión de turnos de un salón o centro de estética.
+Backend en Ruby on Rails para gestionar turnos de un salón o centro de estética
+de una sola sede.
 
-## Estado del proyecto
+## Estado
 
-Etapas implementadas:
+Implementadas: definición del dominio (etapa 1), modelos y base de datos
+(etapa 2) y back-office (etapa 3). La API, Active Storage y Action Mailer quedan
+para las próximas etapas. No hay un deploy publicado.
 
-- Etapa 1: definición del dominio.
-- Etapa 2: modelos, base de datos, asociaciones y validaciones.
-- Etapa 3: back-office autenticado y gestión administrativa.
+## Instalación y acceso
 
-## Tecnologías
-
-- Ruby 3.4.10
-- Ruby on Rails 8.1.3.1
-- SQLite
-- Git
-
-## Dominio
-
-Modelos principales definidos:
-
-- User
-- StaffMember
-- Service
-- ServiceOffering
-- Availability
-- Appointment
-
-La documentación detallada de la Etapa 1 se encuentra en:
-
-`docs/stage_1_definition.md`
-
-## Instalación
-
-Con Ruby 3.4.10 y Bundler instalados, desde la carpeta del proyecto:
+Requisitos: Ruby 3.4.10, Bundler y herramientas de compilación para las gems
+nativas. La aplicación usa Rails 8.1.3.1 y SQLite, sin servidor de base de datos
+adicional.
 
 ```bash
+git clone https://github.com/LucasLuciano92/appointment_scheduler.git
+cd appointment_scheduler
 bundle install
 bin/rails db:prepare
+bin/rails admin:create
 bin/rails server
 ```
 
-La aplicación utiliza SQLite, sin un servidor de base de datos adicional. La
-página inicial dirige al back-office en `/admin`; `/up` permite comprobar que
-Rails está funcionando. Para trabajar con los modelos: `bin/rails console`.
+Abrir **http://localhost:3000/admin**. El comando `admin:create` solicita nombre,
+apellido, email y contraseña; esta última no se muestra al escribirla. No hay
+credenciales predeterminadas ni datos de demostración en seeds. Para automatizar
+la creación admite `ADMIN_FIRST_NAME`, `ADMIN_LAST_NAME`, `ADMIN_EMAIL` y
+`ADMIN_PASSWORD` como variables de entorno.
 
-La zona horaria predeterminada es `America/Argentina/Buenos_Aires` y la moneda es
-`ARS`. Se pueden configurar con `BUSINESS_TIME_ZONE` y `BUSINESS_CURRENCY` al
-iniciar Rails. Los horarios semanales se interpretan en la zona del negocio.
+`db:prepare` crea la base o aplica las migraciones pendientes. Volver a ejecutarlo
+si una actualización incluye migraciones. `/up` es el endpoint de salud;
+`bin/rails console` permite consultar los modelos.
 
-La [guía de la etapa 2](docs/stage_2_models.md) explica las decisiones de datos y
-contiene un ejemplo completo para probar desde la consola.
+## Configuración
 
-## Testing
+| Variable | Valor predeterminado |
+| --- | --- |
+| `BUSINESS_TIME_ZONE` | `America/Argentina/Buenos_Aires` |
+| `BUSINESS_CURRENCY` | `ARS` |
+
+Configurar estos valores antes de cargar disponibilidades. Cambiar la zona
+horaria modifica la interpretación de las franjas semanales. En producción se
+exige HTTPS; el despliegue necesita su propia configuración de secretos y bases
+de datos.
+
+## Modelo de datos y uso
+
+`User` representa clientes y administradores. `StaffMember` y `Service` se
+relacionan mediante `ServiceOffering`. `Availability` define las franjas
+semanales del personal y `Appointment` reserva una oferta para un cliente.
+`AdminSession` gestiona las sesiones administrativas.
+
+El back-office administra esas entidades y permite reservar, reprogramar,
+cancelar y completar turnos. Para comenzar: cargar servicios y personal,
+asignar ofertas, definir disponibilidades y crear clientes.
+
+La futura API utilizará `/api/v1`; todavía no hay endpoints públicos de negocio.
+
+## Verificación
 
 ```bash
-bin/rails test
+bundle exec rspec --exclude-pattern 'spec/system/**/*_spec.rb'
+bundle exec rspec spec/system
 bin/rubocop
 bin/rails zeitwerk:check
 bin/brakeman --no-pager
 ```
 
-Hay pruebas para los seis modelos, las restricciones de base de datos y las
-reglas de disponibilidad, superposición, duración y conservación del historial.
-También se verifican los formularios y permisos del back-office, las sesiones,
-CSRF y las reservas concurrentes usando conexiones independientes a SQLite.
+Las pruebas de sistema requieren Chrome y sus bibliotecas del sistema.
+Selenium Manager obtiene el driver; puede necesitar conexión la primera vez.
+Si Chrome no está en una ubicación habitual, indicar su ejecutable con
+`CHROME_BIN`.
 
-## API
+La suite usa RSpec y cubre modelos, restricciones SQL, permisos, sesiones,
+filtros, reservas concurrentes y flujos de navegador. GitHub Actions ejecuta
+los specs, RuboCop y análisis de seguridad en los PR. `bin/ci` reúne las
+verificaciones locales, incluyendo auditorías de dependencias que requieren
+conexión.
 
-La API será versionada bajo:
+## Documentación
 
-`/api/v1`
+- [Requisitos del TP](docs/tp1_requirements.md): resumen del enunciado.
+- [Etapa 1](docs/stage_1_definition.md): dominio, alcance, reglas y diagrama.
+- [Etapa 2](docs/stage_2_models.md): decisiones de datos y ejemplo de consola.
+- [Etapa 3](docs/stage_3_back_office.md): operaciones, sesiones y concurrencia.
 
-Los endpoints serán documentados cuando se implemente la Etapa 4.
-
-## Back-office
-
-El back-office administrativo está disponible en `/admin`. Para crear tu primera
-cuenta, ejecutá desde una terminal:
-
-```bash
-bin/rails admin:create
-```
-
-El comando solicita nombre, apellido, email y contraseña; la contraseña no se
-muestra al escribirla. No hay credenciales predeterminadas. Luego iniciá Rails
-con `bin/rails server` y abrí `http://localhost:3000/admin`.
-
-Permite administrar servicios, personal, ofertas, disponibilidades, clientes y
-turnos. La sesión vence después de 12 horas. En producción se exige HTTPS.
-
-La [guía de la etapa 3](docs/stage_3_back_office.md) detalla los flujos, rutas,
-controles de acceso y verificaciones realizadas.
+Los comentarios del código explican decisiones que no son evidentes. Los cambios
+se registran en commits y cada etapa cierra con un PR.

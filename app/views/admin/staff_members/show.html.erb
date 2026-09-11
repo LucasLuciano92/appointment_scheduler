@@ -1,13 +1,30 @@
 <% content_for :title, "Detalle de profesional" %>
-<div class="page-heading"><div><%= link_to "← Personal", admin_staff_members_path %><h1>Detalle de profesional</h1></div><%= link_to "Editar", edit_admin_staff_member_path(@staff_member), class: "button" %></div>
+<div class="page-heading">
+  <div>
+    <%= link_to "← Personal", admin_staff_members_path %><h1>Detalle de profesional</h1>
+  </div>
+  <%= link_to "Editar", edit_admin_staff_member_path(@staff_member), class: "button" %>
+</div>
 <section class="panel detail-panel">
-<%= render "admin/shared/errors", record: @staff_member %>
-<% record = @staff_member %>
-<dl class="details"><div><dt>Nombre</dt><dd><%= person_name(record) %></dd></div>
-<div><dt>Email</dt><dd><%= record.email_address.presence || "—" %></dd></div>
-<div><dt>Teléfono</dt><dd><%= record.phone.presence || "—" %></dd></div>
-<div><dt>Estado</dt><dd><%= activation_badge(record) %></dd></div>
-
-</dl>
-<%= button_to "Eliminar profesional", admin_staff_member_path(@staff_member), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
+  <%= render "admin/shared/errors", record: @staff_member %>
+  <% record = @staff_member %>
+  <dl class="details">
+    <div>
+      <dt>Nombre</dt>
+      <dd><%= person_name(record) %></dd>
+    </div>
+    <div>
+      <dt>Email</dt>
+      <dd><%= record.email_address.presence || "—" %></dd>
+    </div>
+    <div>
+      <dt>Teléfono</dt>
+      <dd><%= record.phone.presence || "—" %></dd>
+    </div>
+    <div>
+      <dt>Estado</dt>
+      <dd><%= activation_badge(record) %></dd>
+    </div>
+  </dl>
+  <%= button_to "Eliminar profesional", admin_staff_member_path(@staff_member), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
 </section>

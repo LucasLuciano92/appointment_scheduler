@@ -1,11 +1,44 @@
 <% content_for :title, "Personal" %>
-<div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Personal</h1></div><%= link_to "Agregar profesional", new_admin_staff_member_path, class: "button" %></div>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">ADMINISTRACIÓN</p>
+    <h1>Personal</h1>
+  </div>
+  <%= link_to "Agregar profesional", new_admin_staff_member_path, class: "button" %>
+</div>
 <div class="panel">
-<% if @staff_members.empty? %>
-  <p class="empty-state">Todavía no hay registros en esta página. Usá “Agregar profesional” para comenzar.</p>
-<% else %>
-  <div class="table-scroll"><table><thead><tr><th scope="col">Nombre</th><th scope="col">Email</th><th scope="col">Teléfono</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
-  <tbody><% @staff_members.each do |record| %><tr><td><%= person_name(record) %></td><td><%= record.email_address.presence || "—" %></td><td><%= record.phone.presence || "—" %></td><td><%= activation_badge(record) %></td><td class="row-actions"><%= link_to "Ver", admin_staff_member_path(record) %><%= link_to "Editar", edit_admin_staff_member_path(record) %></td></tr><% end %></tbody></table></div>
-<% end %>
+  <% if @staff_members.empty? %>
+    <p class="empty-state">Todavía no hay registros en esta página. Usá “Agregar profesional” para comenzar.</p>
+  <% else %>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Email</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @staff_members.each do |record| %>
+            <tr>
+              <td><%= person_name(record) %></td>
+              <td><%= record.email_address.presence || "—" %></td>
+              <td><%= record.phone.presence || "—" %></td>
+              <td><%= activation_badge(record) %></td>
+              <td>
+                <div class="row-actions">
+                  <%= link_to "Ver", admin_staff_member_path(record) %>
+                  <%= link_to "Editar", edit_admin_staff_member_path(record) %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
 </div>
 <%= render "admin/shared/pagination" %>

@@ -1,10 +1,28 @@
 <% if appointments.empty? %>
   <p class="empty-state">No hay turnos para mostrar.</p>
 <% else %>
-  <div class="table-scroll"><table>
-    <thead><tr><th scope="col">Fecha y hora</th><th scope="col">Cliente</th><th scope="col">Profesional / servicio</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
-    <tbody><% appointments.each do |appointment| %>
-      <tr><td><%= display_datetime(appointment.starts_at) %></td><td><%= person_name(appointment.customer) %></td><td><%= person_name(appointment.staff_member) %><small><%= appointment.service.name %></small></td><td><%= appointment_badge(appointment) %></td><td><%= link_to "Ver turno", admin_appointment_path(appointment) %></td></tr>
-    <% end %></tbody>
-  </table></div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Fecha y hora</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Profesional / servicio</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% appointments.each do |appointment| %>
+          <tr>
+            <td><%= display_datetime(appointment.starts_at) %></td>
+            <td><%= person_name(appointment.customer) %></td>
+            <td><%= person_name(appointment.staff_member) %><small><%= appointment.service.name %></small></td>
+            <td><%= appointment_badge(appointment) %></td>
+            <td><%= link_to "Ver turno", admin_appointment_path(appointment) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 <% end %>

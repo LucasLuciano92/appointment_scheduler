@@ -1,4 +1,21 @@
 module AdminHelper
+  def admin_navigation_items
+    {
+      "Resumen" => admin_root_path,
+      "Turnos" => admin_appointments_path,
+      "Clientes" => admin_customers_path,
+      "Personal" => admin_staff_members_path,
+      "Servicios" => admin_services_path,
+      "Ofertas" => admin_service_offerings_path,
+      "Disponibilidad" => admin_availabilities_path
+    }
+  end
+
+  def admin_navigation_link(label, path)
+    selected = request.path == path || (path != admin_root_path && request.path.start_with?("#{path}/"))
+    link_to label, path, class: ("selected" if selected), aria: { current: ("page" if selected) }
+  end
+
   def person_name(person)
     "#{person.first_name} #{person.last_name}"
   end

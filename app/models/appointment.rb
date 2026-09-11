@@ -7,13 +7,16 @@ class Appointment < ApplicationRecord
 
   enum :status, { scheduled: 0, cancelled: 1, completed: 2 }, validate: true
 
+  scope :with_booking_details, -> { includes(:customer, :staff_member, :service) }
+
   before_validation :calculate_end_time
   before_destroy :prevent_destroy
 
   validates :starts_at, :ends_at, presence: true
   validate :ordered_times
   validate :valid_status_transition
-  validate :valid_booking, if: :booking_changed?
+  validate :reschedulable, :active_customer, :active_offering, :future_start,
+    :matching_duration, :within_availability, :non_overlapping_appointments, if: :booking_changed?
 
   private
 
@@ -45,28 +48,51 @@ class Appointment < ApplicationRecord
     end
   end
 
-  def valid_booking
+  def reschedulable
     if persisted? && (status_in_database != "scheduled" || !scheduled?)
       errors.add(:base, :reschedule_scheduled)
     end
+  end
+
+  def active_customer
     errors.add(:customer, :active_customer) unless customer&.customer? && customer.active?
+  end
+
+  def active_offering
     unless service_offering&.active? && staff_member&.active? && service&.active?
       errors.add(:service_offering, :active_offering)
     end
-    return unless starts_at && ends_at
+  end
+
+  def future_start
+    return unless starts_at
 
     errors.add(:starts_at, :future_start) unless starts_at > Time.current
-    if service&.duration_minutes && ends_at != starts_at + service.duration_minutes.minutes
+  end
+
+  def matching_duration
+    return unless starts_at && ends_at && service&.duration_minutes
+
+    if ends_at != starts_at + service.duration_minutes.minutes
       errors.add(:ends_at, :matching_duration)
     end
-    return unless staff_member
+  end
 
-    unless staff_member.availabilities.active.any? { |availability| availability.covers?(starts_at, ends_at) }
+  def within_availability
+    return unless staff_member && starts_at && ends_at
+
+    availabilities = staff_member.availabilities.active.where(day_of_week: starts_at.in_time_zone.wday)
+    unless availabilities.any? { |availability| availability.covers?(starts_at, ends_at) }
       errors.add(:base, :within_availability)
     end
+  end
+
+  def non_overlapping_appointments
+    return unless scheduled? && staff_member && starts_at && ends_at
+
     conflicts = staff_member.appointments.scheduled.where.not(id: id)
       .where("starts_at < ? AND ends_at > ?", ends_at, starts_at)
-    errors.add(:base, :overlapping_appointment) if scheduled? && conflicts.exists?
+    errors.add(:base, :overlapping_appointment) if conflicts.exists?
   end
 
   def prevent_destroy

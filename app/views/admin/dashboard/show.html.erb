@@ -1,11 +1,22 @@
 <% content_for :title, "Resumen" %>
-<div class="page-heading"><div><p class="eyebrow">TU SALÓN, EN ORDEN</p><h1>Resumen de la agenda</h1><p class="muted"><%= Time.zone.today.strftime("%d/%m/%Y") %> · Una vista de lo que viene.</p></div><%= link_to "Reservar turno", new_admin_appointment_path, class: "button" %></div>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">TU SALÓN, EN ORDEN</p>
+    <h1>Resumen de la agenda</h1><p class="muted"><%= Time.zone.today.strftime("%d/%m/%Y") %> · Una vista de lo que viene.</p>
+  </div>
+  <%= link_to "Reservar turno", new_admin_appointment_path, class: "button" %>
+</div>
 <div class="stats">
   <% { "Turnos de hoy" => @today_count, "Próximas reservas" => @scheduled_count, "Clientes activos" => @customer_count, "Profesionales activos" => @staff_count }.each do |label, count| %>
-    <section class="stat"><span><%= label %></span><strong><%= count %></strong></section>
+    <section class="stat">
+      <span><%= label %></span><strong><%= count %></strong>
+    </section>
   <% end %>
 </div>
-<section class="panel"><div class="section-heading"><h2>Próximos turnos</h2><%= link_to "Ver agenda completa →", admin_appointments_path %></div>
+<section class="panel">
+  <div class="section-heading">
+    <h2>Próximos turnos</h2><%= link_to "Ver agenda completa →", admin_appointments_path %>
+  </div>
   <%= render "admin/appointments/table", appointments: @appointments %>
 </section>
 <p class="muted">Para comenzar, cargá servicios y personal; luego asigná sus ofertas y horarios de atención.</p>

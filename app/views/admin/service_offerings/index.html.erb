@@ -1,11 +1,42 @@
 <% content_for :title, "Ofertas de servicios" %>
-<div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Ofertas de servicios</h1></div><%= link_to "Agregar oferta", new_admin_service_offering_path, class: "button" %></div>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">ADMINISTRACIÓN</p>
+    <h1>Ofertas de servicios</h1>
+  </div>
+  <%= link_to "Agregar oferta", new_admin_service_offering_path, class: "button" %>
+</div>
 <div class="panel">
-<% if @service_offerings.empty? %>
-  <p class="empty-state">Todavía no hay registros en esta página. Usá “Agregar oferta” para comenzar.</p>
-<% else %>
-  <div class="table-scroll"><table><thead><tr><th scope="col">Profesional</th><th scope="col">Servicio</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
-  <tbody><% @service_offerings.each do |record| %><tr><td><%= person_name(record.staff_member) %></td><td><%= record.service.name %></td><td><%= activation_badge(record) %></td><td class="row-actions"><%= link_to "Ver", admin_service_offering_path(record) %><%= link_to "Editar", edit_admin_service_offering_path(record) %></td></tr><% end %></tbody></table></div>
-<% end %>
+  <% if @service_offerings.empty? %>
+    <p class="empty-state">Todavía no hay registros en esta página. Usá “Agregar oferta” para comenzar.</p>
+  <% else %>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Profesional</th>
+            <th scope="col">Servicio</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @service_offerings.each do |record| %>
+            <tr>
+              <td><%= person_name(record.staff_member) %></td>
+              <td><%= record.service.name %></td>
+              <td><%= activation_badge(record) %></td>
+              <td>
+                <div class="row-actions">
+                  <%= link_to "Ver", admin_service_offering_path(record) %>
+                  <%= link_to "Editar", edit_admin_service_offering_path(record) %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
 </div>
 <%= render "admin/shared/pagination" %>
