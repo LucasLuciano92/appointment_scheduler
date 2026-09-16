@@ -1,0 +1,7 @@
+<% content_for :title, "Editar turno" %>
+<div class="page-heading">
+  <div>
+    <%= link_to "← Volver al turno", admin_appointment_path(@appointment) %><h1><%= @appointment.scheduled? ? "Editar / reprogramar turno" : "Editar notas del turno" %></h1>
+  </div>
+</div>
+<%= render "form" %>

@@ -1,0 +1,42 @@
+<section class="panel form-panel">
+  <%= render "admin/shared/errors", record: @customer %>
+  <%= form_with model: @customer, scope: :customer, url: (@customer.persisted? ? admin_customer_path(@customer) : admin_customers_path) do |form| %>
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :first_name, "Nombre" %>
+        <%= form.text_field :first_name, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :last_name, "Apellido" %>
+        <%= form.text_field :last_name, required: true %>
+      </div>
+    </div>
+    <div class="field">
+      <%= form.label :email_address, "Email" %>
+      <%= form.email_field :email_address, required: true, autocomplete: "off" %>
+    </div>
+    <div class="field">
+      <%= form.label :phone, "Teléfono (opcional)" %>
+      <%= form.telephone_field :phone %>
+    </div>
+    <p class="muted"><%= @customer.persisted? ? "Dejá la contraseña vacía para conservar la actual." : "La contraseña debe tener al menos 8 caracteres." %></p>
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :password, "Contraseña" %>
+        <%= form.password_field :password, required: @customer.new_record?, minlength: 8, maxlength: 72, autocomplete: "new-password" %>
+      </div>
+      <div class="field">
+        <%= form.label :password_confirmation, "Repetir contraseña" %>
+        <%= form.password_field :password_confirmation, required: @customer.new_record?, autocomplete: "new-password" %>
+      </div>
+    </div>
+    <div class="field checkbox">
+      <%= form.check_box :active %>
+      <%= form.label :active, "Activo" %>
+    </div>
+    <div class="form-actions">
+      <%= form.submit "Guardar", class: "button" %>
+      <%= link_to "Cancelar", admin_customers_path, class: "button secondary" %>
+    </div>
+  <% end %>
+</section>

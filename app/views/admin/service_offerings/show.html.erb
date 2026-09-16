@@ -1,0 +1,26 @@
+<% content_for :title, "Detalle de oferta" %>
+<div class="page-heading">
+  <div>
+    <%= link_to "← Ofertas de servicios", admin_service_offerings_path %><h1>Detalle de oferta</h1>
+  </div>
+  <%= link_to "Editar", edit_admin_service_offering_path(@service_offering), class: "button" %>
+</div>
+<section class="panel detail-panel">
+  <%= render "admin/shared/errors", record: @service_offering %>
+  <% record = @service_offering %>
+  <dl class="details">
+    <div>
+      <dt>Profesional</dt>
+      <dd><%= person_name(record.staff_member) %></dd>
+    </div>
+    <div>
+      <dt>Servicio</dt>
+      <dd><%= record.service.name %></dd>
+    </div>
+    <div>
+      <dt>Estado</dt>
+      <dd><%= activation_badge(record) %></dd>
+    </div>
+  </dl>
+  <%= button_to "Eliminar oferta", admin_service_offering_path(@service_offering), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
+</section>

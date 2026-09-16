@@ -1,0 +1,28 @@
+<% content_for :title, "Turnos" %>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">AGENDA DEL SALÓN</p>
+    <h1>Turnos</h1><p class="muted">Consultá las reservas y organizá la atención.</p>
+  </div>
+  <%= link_to "Reservar turno", new_admin_appointment_path, class: "button" %>
+</div>
+<section class="panel">
+  <%= form_with url: admin_appointments_path, method: :get, class: "filters" do |form| %>
+    <div class="field">
+      <%= form.label :date, "Fecha" %>
+      <%= form.date_field :date, value: params[:date] %>
+    </div>
+    <div class="field">
+      <%= form.label :status, "Estado" %>
+      <%= form.select :status, Appointment.statuses.keys.map { |status| [ I18n.t("appointment_statuses.#{status}"), status ] }, include_blank: "Todos", selected: params[:status] %>
+    </div>
+    <div class="field">
+      <%= form.label :staff_member_id, "Profesional" %>
+      <%= form.select :staff_member_id, @staff_members.map { |staff| [ person_name(staff), staff.id ] }, include_blank: "Todos", selected: params[:staff_member_id] %>
+    </div>
+    <%= form.submit "Filtrar", class: "button secondary" %>
+    <%= link_to "Limpiar", admin_appointments_path %>
+  <% end %>
+  <%= render "table", appointments: @appointments %>
+</section>
+<%= render "admin/shared/pagination" %>

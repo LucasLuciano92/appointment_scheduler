@@ -1,0 +1,30 @@
+<% content_for :title, "Detalle de franja horaria" %>
+<div class="page-heading">
+  <div>
+    <%= link_to "← Disponibilidad semanal", admin_availabilities_path %><h1>Detalle de franja horaria</h1>
+  </div>
+  <%= link_to "Editar", edit_admin_availability_path(@availability), class: "button" %>
+</div>
+<section class="panel detail-panel">
+  <%= render "admin/shared/errors", record: @availability %>
+  <% record = @availability %>
+  <dl class="details">
+    <div>
+      <dt>Profesional</dt>
+      <dd><%= person_name(record.staff_member) %></dd>
+    </div>
+    <div>
+      <dt>Día</dt>
+      <dd><%= I18n.t("weekdays.#{record.day_of_week}") %></dd>
+    </div>
+    <div>
+      <dt>Horario</dt>
+      <dd><%= "#{record.start_time.strftime("%H:%M")} – #{record.end_time.strftime("%H:%M")}" %></dd>
+    </div>
+    <div>
+      <dt>Estado</dt>
+      <dd><%= activation_badge(record) %></dd>
+    </div>
+  </dl>
+  <%= button_to "Eliminar franja horaria", admin_availability_path(@availability), method: :delete, class: "button danger", form: { data: { turbo_confirm: "¿Eliminar este registro? Si tiene historial, se conservará." } } %>
+</section>
