@@ -16,6 +16,23 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      resource :registration, only: :create
+      resource :session, only: %i[create destroy]
+      resource :profile, only: %i[show update]
+      resources :services, only: %i[index show] do
+        resources :staff_members, only: :index, module: :services
+      end
+      resources :service_offerings, only: [] do
+        get :available_slots, on: :member
+      end
+      resources :appointments, only: %i[index show create] do
+        patch :cancel, on: :member
+      end
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
