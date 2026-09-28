@@ -53,6 +53,6 @@ class AvailableSlotFinder
   end
 
   def local_time(time)
-    local_day + time.seconds_since_midnight.seconds
+    Time.zone.local(date.year, date.month, date.day, time.hour, time.min, time.sec)
   end
 end

@@ -40,11 +40,13 @@ si una actualización incluye migraciones. `/up` es el endpoint de salud;
 | --- | --- |
 | `BUSINESS_TIME_ZONE` | `America/Argentina/Buenos_Aires` |
 | `BUSINESS_CURRENCY` | `ARS` |
+| `API_ALLOWED_ORIGINS` | `http://localhost:5173` fuera de producción; vacío en producción |
 
 Configurar estos valores antes de cargar disponibilidades. Cambiar la zona
 horaria modifica la interpretación de las franjas semanales. En producción se
 exige HTTPS; el despliegue necesita su propia configuración de secretos y bases
-de datos.
+de datos. `API_ALLOWED_ORIGINS` acepta una lista de orígenes separados por comas;
+en producción debe declarar explícitamente la URL del frontend.
 
 ## Modelo de datos y uso
 
@@ -81,7 +83,7 @@ público de administradores.
 | `GET /api/v1/services/:id` | Público | Consultar un servicio activo |
 | `GET /api/v1/services/:service_id/staff_members` | Público | Listar profesionales y ofertas activas |
 | `GET /api/v1/service_offerings/:id/available_slots?date=YYYY-MM-DD` | Público | Consultar horarios libres |
-| `GET/POST /api/v1/appointments` | Token | Listar turnos propios o reservar |
+| `GET/POST /api/v1/appointments` | Token | Listar turnos propios por páginas o reservar |
 | `GET /api/v1/appointments/:id` | Token | Consultar un turno propio |
 | `PATCH /api/v1/appointments/:id/cancel` | Token | Cancelar un turno propio futuro |
 

@@ -1,11 +1,18 @@
 module Api
   module V1
     class BaseController < ActionController::API
+      class InvalidPagination < StandardError; end
+
+      PAGE_SIZE = 25
+      MAX_PAGE = 1_000_000
+      RATE_LIMIT_STORE = Rails.env.test? ? ActiveSupport::Cache::MemoryStore.new : Rails.cache
+
       before_action :prevent_caching
       around_action :use_spanish
 
       rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
       rescue_from ActionController::ParameterMissing, with: :render_bad_request
+      rescue_from InvalidPagination, with: :render_invalid_pagination
 
       private
 
@@ -21,10 +28,6 @@ module Api
         render_error(:unauthorized, "Se requiere un token de cliente válido.", :unauthorized)
       end
 
-      def render_record(record, status: :ok)
-        render json: yield(record), status: status
-      end
-
       def render_validation_errors(record)
         render json: {
           error: {
@@ -32,7 +35,7 @@ module Api
             message: "No se pudo guardar el recurso.",
             details: record.errors.to_hash
           }
-        }, status: :unprocessable_entity
+        }, status: :unprocessable_content
       end
 
       def render_error(code, message, status, details: nil)
@@ -84,6 +87,22 @@ module Api
         }
       end
 
+      def paginate(scope)
+        value = params[:page]
+        raise InvalidPagination unless value.nil? || value.is_a?(String)
+
+        page = value.nil? ? 1 : Integer(value, 10, exception: false)
+        raise InvalidPagination unless (1..MAX_PAGE).cover?(page)
+
+        records = scope.offset((page - 1) * PAGE_SIZE).limit(PAGE_SIZE + 1).to_a
+        has_next_page = records.length > PAGE_SIZE
+        [ records.first(PAGE_SIZE), {
+          page: page,
+          per_page: PAGE_SIZE,
+          next_page: has_next_page ? page + 1 : nil
+        } ]
+      end
+
       def prevent_caching
         response.headers["Cache-Control"] = "no-store"
       end
@@ -99,6 +118,10 @@ module Api
       def render_bad_request(error)
         render_error(:bad_request, "Faltan parámetros requeridos.", :bad_request,
           details: { parameter: error.param })
+      end
+
+      def render_invalid_pagination
+        render_error(:invalid_page, "La página debe ser un número entero positivo.", :bad_request)
       end
     end
   end

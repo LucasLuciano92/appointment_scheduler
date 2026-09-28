@@ -2,6 +2,7 @@ module Api
   module V1
     class RegistrationsController < BaseController
       rate_limit to: 5, within: 1.minute, only: :create,
+        store: RATE_LIMIT_STORE,
         with: -> { render_error(:rate_limited, "Demasiados intentos. Volvé a intentar más tarde.", :too_many_requests) }
 
       def create

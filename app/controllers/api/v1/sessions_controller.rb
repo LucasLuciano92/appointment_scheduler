@@ -3,6 +3,7 @@ module Api
     class SessionsController < BaseController
       before_action :authenticate_customer!, only: :destroy
       rate_limit to: 10, within: 3.minutes, only: :create,
+        store: RATE_LIMIT_STORE,
         with: -> { render_error(:rate_limited, "Demasiados intentos. Volvé a intentar más tarde.", :too_many_requests) }
 
       def create

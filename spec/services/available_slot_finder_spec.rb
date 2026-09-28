@@ -23,4 +23,18 @@ RSpec.describe AvailableSlotFinder do
     expect { described_class.new(@offering, "tomorrow") }.to raise_error(described_class::InvalidDate)
     expect { described_class.new(@offering, "2030-02-30") }.to raise_error(described_class::InvalidDate)
   end
+
+  it "uses availability wall-clock times across daylight-saving changes" do
+    original_zone = Time.zone
+    Time.zone = "Europe/Madrid"
+    travel_to Time.zone.local(2030, 3, 30, 8)
+    date = Date.new(2030, 3, 31)
+    @availability.update!(day_of_week: date.wday, start_time: "09:00", end_time: "10:00")
+
+    slots = described_class.new(@offering, date.iso8601).call
+
+    expect(Time.iso8601(slots.first.fetch(:starts_at)).in_time_zone.hour).to eq(9)
+  ensure
+    Time.zone = original_zone
+  end
 end

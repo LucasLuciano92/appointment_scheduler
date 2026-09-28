@@ -3,7 +3,10 @@ require "rails_helper"
 RSpec.describe "API V1", type: :request do
   include BookingSetup
 
-  before { setup_booking }
+  before do
+    Api::V1::BaseController::RATE_LIMIT_STORE.clear
+    setup_booking
+  end
   after { travel_back }
 
   def json
@@ -37,7 +40,7 @@ RSpec.describe "API V1", type: :request do
         user: { first_name: "", last_name: "", email_address: "bad", password: "short" }
       }, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json.dig("error", "code")).to eq("validation_failed")
       expect(json.dig("error", "details")).to include("first_name", "email_address", "password")
     end
@@ -82,6 +85,38 @@ RSpec.describe "API V1", type: :request do
       expect(response).to have_http_status(:unauthorized)
       get "/api/v1/profile", headers: { "Authorization" => "Basic #{token}" }
       expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "rate limits repeated login attempts" do
+      10.times do
+        post "/api/v1/session", params: {
+          session: { email_address: @customer.email_address, password: "incorrect" }
+        }, as: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      post "/api/v1/session", params: {
+        session: { email_address: @customer.email_address, password: "incorrect" }
+      }, as: :json
+
+      expect(response).to have_http_status(:too_many_requests)
+      expect(json.dig("error", "code")).to eq("rate_limited")
+    end
+
+    it "rate limits repeated registration attempts" do
+      5.times do
+        post "/api/v1/registration", params: {
+          user: { first_name: "", last_name: "", email_address: "bad", password: "short" }
+        }, as: :json
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      post "/api/v1/registration", params: {
+        user: { first_name: "", last_name: "", email_address: "bad", password: "short" }
+      }, as: :json
+
+      expect(response).to have_http_status(:too_many_requests)
+      expect(json.dig("error", "code")).to eq("rate_limited")
     end
   end
 
@@ -151,7 +186,7 @@ RSpec.describe "API V1", type: :request do
         appointment: { service_offering_id: @offering.id, starts_at: 1.hour.ago.iso8601 }
       }, headers: authorization_for, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json.dig("error", "code")).to eq("validation_failed")
     end
 
@@ -179,7 +214,7 @@ RSpec.describe "API V1", type: :request do
       expect(appointment.reload).to be_cancelled
 
       patch "/api/v1/appointments/#{appointment.id}/cancel", headers: authorization_for
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json.dig("error", "code")).to eq("not_cancellable")
     end
 
@@ -188,6 +223,43 @@ RSpec.describe "API V1", type: :request do
 
       expect(response).to have_http_status(:bad_request)
       expect(json.dig("error", "code")).to eq("invalid_status")
+    end
+
+    it "paginates appointment history and validates the page" do
+      now = Time.current
+      Appointment.insert_all!(26.times.map do |index|
+        starts_at = @starts_at + index.hours
+        {
+          customer_id: @customer.id, service_offering_id: @offering.id,
+          starts_at: starts_at, ends_at: starts_at + 30.minutes, status: 1,
+          created_at: now, updated_at: now
+        }
+      end)
+
+      get "/api/v1/appointments", params: { page: "1" }, headers: authorization_for
+      expect(response).to have_http_status(:ok)
+      expect(json.fetch("data").size).to eq(25)
+      expect(json.fetch("meta")).to eq(
+        "page" => 1, "per_page" => 25, "next_page" => 2
+      )
+
+      get "/api/v1/appointments", params: { page: "zero" }, headers: authorization_for
+      expect(response).to have_http_status(:bad_request)
+      expect(json.dig("error", "code")).to eq("invalid_page")
+    end
+  end
+
+  describe "CORS" do
+    it "allows the configured non-production frontend origin on API preflights" do
+      options "/api/v1/services", headers: {
+        "Origin" => "http://localhost:5173",
+        "Access-Control-Request-Method" => "GET",
+        "Access-Control-Request-Headers" => "Authorization"
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.headers["Access-Control-Allow-Origin"]).to eq("http://localhost:5173")
+      expect(response.headers["Access-Control-Allow-Methods"]).to include("GET")
     end
   end
 end

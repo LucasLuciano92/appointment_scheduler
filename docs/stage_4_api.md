@@ -66,7 +66,7 @@ Todas estas rutas exigen token:
 
 | Método y ruta | Operación |
 | --- | --- |
-| `GET /appointments` | Lista únicamente turnos propios; acepta `status` |
+| `GET /appointments` | Lista únicamente turnos propios; acepta `status` y `page` |
 | `POST /appointments` | Reserva mediante `service_offering_id`, `starts_at` y `notes` |
 | `GET /appointments/:id` | Muestra únicamente un turno propio |
 | `PATCH /appointments/:id/cancel` | Cancela un turno propio, futuro y confirmado |
@@ -74,6 +74,16 @@ Todas estas rutas exigen token:
 El servidor toma el customer del token e ignora cualquier `customer_id` enviado.
 La creación reutiliza la transacción de reserva del back-office, por lo que aplica
 las mismas reglas de actividad, disponibilidad, duración y no superposición.
+
+El listado devuelve 25 registros por página e incluye metadatos para avanzar sin
+cargar el historial completo:
+
+```json
+{
+  "data": [],
+  "meta": { "page": 1, "per_page": 25, "next_page": 2 }
+}
+```
 
 ```bash
 curl -X POST http://localhost:3000/api/v1/appointments \
@@ -108,12 +118,23 @@ Las respuestas llevan `Cache-Control: no-store`. No se exponen email ni teléfon
 del personal, credenciales, roles, estados internos de activación ni datos de
 otros clientes.
 
+## Acceso desde el frontend
+
+CORS se limita a los orígenes indicados en `API_ALLOWED_ORIGINS`, separados por
+comas. Fuera de producción el valor predeterminado es
+`http://localhost:5173`. En producción no se habilita ningún origen de manera
+implícita: el deploy debe definir la URL exacta del frontend.
+
 ## Verificación
 
 Los specs cubren emisión, hash, expiración y revocación de tokens; registro y
-login; atributos permitidos; visibilidad del catálogo; cálculo de horarios;
-creación, listado, consulta y cancelación de turnos; filtros; y aislamiento entre
-clientes.
+login; rate limiting; atributos permitidos; CORS; visibilidad del catálogo;
+cálculo de horarios, incluso en cambios DST; paginación; creación, listado,
+consulta y cancelación de turnos; filtros; y aislamiento entre clientes.
+
+Como mejoras operativas posteriores quedan la purga periódica de sesiones
+vencidas y el uso de caché HTTP en los endpoints públicos del catálogo. No
+afectan el contrato ni las reglas funcionales de esta etapa.
 
 Active Storage para imágenes de servicios y el email de confirmación mediante
 Action Mailer se incorporarán en la etapa 5.

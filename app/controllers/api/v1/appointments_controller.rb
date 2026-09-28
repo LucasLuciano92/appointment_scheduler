@@ -12,7 +12,11 @@ module Api
           end
           scope = scope.where(status: params[:status])
         end
-        render json: { data: scope.map { |appointment| appointment_json(appointment) } }
+        appointments, pagination = paginate(scope)
+        render json: {
+          data: appointments.map { |appointment| appointment_json(appointment) },
+          meta: pagination
+        }
       end
 
       def show
@@ -31,7 +35,7 @@ module Api
       def cancel
         unless @appointment.scheduled? && @appointment.starts_at > Time.current
           return render_error(:not_cancellable,
-            "Solo se puede cancelar un turno propio, futuro y confirmado.", :unprocessable_entity)
+            "Solo se puede cancelar un turno propio, futuro y confirmado.", :unprocessable_content)
         end
 
         if AppointmentBooking.save(@appointment, status: :cancelled)
