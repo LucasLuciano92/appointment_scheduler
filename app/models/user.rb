@@ -4,6 +4,9 @@ class User < ApplicationRecord
   has_many :admin_sessions, dependent: :destroy
   after_update :revoke_admin_sessions, if: :admin_access_changed?
 
+  has_many :api_sessions, dependent: :destroy
+  after_update :revoke_api_sessions, if: :api_access_changed?
+
   has_many :appointments, foreign_key: :customer_id, inverse_of: :customer,
     dependent: :restrict_with_error
 
@@ -24,5 +27,13 @@ class User < ApplicationRecord
 
   def revoke_admin_sessions
     admin_sessions.reset.destroy_all
+  end
+
+  def api_access_changed?
+    saved_change_to_password_digest? || saved_change_to_role? || (saved_change_to_active? && !active?)
+  end
+
+  def revoke_api_sessions
+    api_sessions.reset.destroy_all
   end
 end
