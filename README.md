@@ -7,9 +7,10 @@ de una sola sede.
 
 Implementadas: definición del dominio (etapa 1), modelos y base de datos
 (etapa 2), back-office (etapa 3), API JSON (etapa 4), imágenes de servicios con
-Active Storage y confirmaciones por email con Action Mailer (etapa 5), y
-controles de calidad y seguridad con RuboCop y Brakeman (etapa 6). No hay un
-deploy publicado.
+Active Storage y confirmaciones por email con Action Mailer (etapa 5),
+controles de calidad y seguridad con RuboCop y Brakeman (etapa 6), y un deploy
+reproducible con Docker y Kamal (etapa 7). La URL pública queda pendiente de
+asignar hasta disponer del servidor y dominio definitivos.
 
 ## Instalación y acceso
 
@@ -48,9 +49,18 @@ si una actualización incluye migraciones. `/up` es el endpoint de salud;
 
 Configurar estos valores antes de cargar disponibilidades. Cambiar la zona
 horaria modifica la interpretación de las franjas semanales. En producción se
-exige HTTPS; el despliegue necesita su propia configuración de secretos y bases
-de datos. `API_ALLOWED_ORIGINS` acepta una lista de orígenes separados por comas;
-en producción debe declarar explícitamente la URL del frontend.
+exige HTTPS y `APP_HOST`; Kamal Proxy gestiona TLS y el volumen persistente
+conserva las bases SQLite y los adjuntos. `API_ALLOWED_ORIGINS` acepta una lista
+de orígenes separados por comas; en producción debe declarar explícitamente la
+URL del frontend.
+
+## Deploy
+
+La imagen de producción se publica en GitHub Container Registry y se despliega
+en un servidor con Docker mediante Kamal. La configuración requiere un host
+SSH, un dominio y credenciales que no se guardan en el repositorio. El
+procedimiento completo —primer arranque, actualizaciones, rollback, SMTP y
+copias de seguridad— está en la [documentación de la etapa 7](docs/stage_7_deploy.md).
 
 ## Modelo de datos y uso
 
@@ -139,6 +149,7 @@ conexión.
 - [Etapa 4](docs/stage_4_api.md): contrato JSON, autenticación y permisos.
 - [Etapa 5](docs/stage_5_storage_mailer.md): imágenes, emails y pruebas.
 - [Etapa 6](docs/stage_6_quality_security.md): calidad, seguridad y CI.
+- [Etapa 7](docs/stage_7_deploy.md): Docker, Kamal, HTTPS y operación.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
 se registran en commits y cada etapa cierra con un PR.

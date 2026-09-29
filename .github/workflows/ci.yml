@@ -65,6 +65,43 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+      - name: Check Kamal configuration
+        env:
+          APP_HOST: turnos.example.com
+          DEPLOY_HOST: 203.0.113.10
+          KAMAL_REGISTRY_PASSWORD: test-token
+          RAILS_MASTER_KEY: test-master-key
+        run: bin/kamal config > /dev/null
+
+  production-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Build production image
+        run: docker build --tag appointment-scheduler:test .
+
+      - name: Start production container
+        run: |
+          docker run --detach --name appointment-scheduler-test \
+            --publish 127.0.0.1:3000:80 \
+            --env APP_HOST=localhost \
+            --env SECRET_KEY_BASE=ci-only-secret-key-base \
+            appointment-scheduler:test
+
+      - name: Check production health endpoint
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://localhost:3000/up; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs appointment-scheduler-test
+          exit 1
+
   test:
     runs-on: ubuntu-latest
 
