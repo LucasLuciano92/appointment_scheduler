@@ -65,6 +65,14 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+      - name: Check Kamal configuration
+        env:
+          APP_HOST: turnos.example.com
+          DEPLOY_HOST: 203.0.113.10
+          KAMAL_REGISTRY_PASSWORD: test-token
+          RAILS_MASTER_KEY: test-master-key
+        run: bin/kamal config > /dev/null
+
   production-image:
     runs-on: ubuntu-latest
 
@@ -93,14 +101,6 @@ jobs:
           done
           docker logs appointment-scheduler-test
           exit 1
-
-      - name: Check Kamal configuration
-        env:
-          APP_HOST: turnos.example.com
-          DEPLOY_HOST: 203.0.113.10
-          KAMAL_REGISTRY_PASSWORD: test-token
-          RAILS_MASTER_KEY: test-master-key
-        run: bin/kamal config > /dev/null
 
   test:
     runs-on: ubuntu-latest
