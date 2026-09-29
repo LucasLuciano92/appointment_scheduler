@@ -1,0 +1,16 @@
+<h1>Tu turno está confirmado</h1>
+
+<p>Hola <%= @customer.first_name %>, reservamos tu turno correctamente.</p>
+
+<dl>
+  <dt>Servicio</dt>
+  <dd><%= @service.name %></dd>
+  <dt>Profesional</dt>
+  <dd><%= "#{@staff_member.first_name} #{@staff_member.last_name}" %></dd>
+  <dt>Fecha y hora</dt>
+  <dd><%= @formatted_starts_at %></dd>
+  <dt>Duración</dt>
+  <dd><%= "#{@service.duration_minutes} minutos" %></dd>
+</dl>
+
+<p>Si no podés asistir, cancelá el turno desde tu cuenta.</p>

@@ -137,4 +137,4 @@ vencidas y el uso de caché HTTP en los endpoints públicos del catálogo. No
 afectan el contrato ni las reglas funcionales de esta etapa.
 
 Active Storage para imágenes de servicios y el email de confirmación mediante
-Action Mailer se incorporarán en la etapa 5.
+Action Mailer se incorporaron en la etapa 5.

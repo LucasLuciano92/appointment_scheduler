@@ -60,7 +60,8 @@ module Api
           name: service.name,
           description: service.description,
           duration_minutes: service.duration_minutes,
-          price: service.price.to_s
+          price: service.price.to_s,
+          image_url: service.image.attached? ? url_for(service.image) : nil
         }
       end
 

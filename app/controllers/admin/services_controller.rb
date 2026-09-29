@@ -26,7 +26,9 @@ module Admin
     end
 
     def update
-      if @service.update(service_params)
+      attributes = service_params
+      if @service.update(attributes)
+        remove_image if remove_image? && attributes[:image].blank? && @service.image.attached?
         redirect_to admin_service_path(@service), notice: "Cambios guardados.", status: :see_other
       else
         render :edit, status: :unprocessable_entity
@@ -49,7 +51,18 @@ module Admin
     end
 
     def service_params
-      params.expect(service: [ :name, :description, :duration_minutes, :price, :active ])
+      params.expect(service: [ :name, :description, :duration_minutes, :price, :active, :image, :remove_image ])
+        .except(:remove_image)
+    end
+
+    def remove_image?
+      ActiveModel::Type::Boolean.new.cast(params.dig(:service, :remove_image))
+    end
+
+    def remove_image
+      blob = @service.image.blob
+      @service.image.detach
+      blob.purge_later
     end
   end
 end

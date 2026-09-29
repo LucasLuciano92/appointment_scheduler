@@ -1,4 +1,7 @@
 es:
+  time:
+    formats:
+      appointment: "%d/%m/%Y a las %H:%M"
   appointment_statuses:
     scheduled: Confirmado
     cancelled: Cancelado
@@ -56,6 +59,7 @@ es:
         active: Activo
       service:
         name: Nombre
+        image: Imagen
         duration_minutes: Duración
         price: Precio
         active: Activo

@@ -13,6 +13,7 @@ RSpec.describe Appointment, type: :model do
     expect(record.customer).to eq(@customer)
     expect(record.staff_member).to eq(@staff)
     expect(record.service).to eq(@service)
+    expect(record.service.image).not_to be_attached
   end
 
   it "creates a scheduled appointment and calculates its end" do

@@ -7,10 +7,13 @@ class Appointment < ApplicationRecord
 
   enum :status, { scheduled: 0, cancelled: 1, completed: 2 }, validate: true
 
-  scope :with_booking_details, -> { includes(:customer, :staff_member, :service) }
+  scope :with_booking_details, lambda {
+    includes(:customer, :staff_member, service: { image_attachment: :blob })
+  }
 
   before_validation :calculate_end_time
   before_destroy :prevent_destroy
+  after_create_commit :send_confirmation_email
 
   validates :starts_at, :ends_at, presence: true
   validate :ordered_times
@@ -98,5 +101,9 @@ class Appointment < ApplicationRecord
   def prevent_destroy
     errors.add(:base, :preserve_appointment)
     throw :abort
+  end
+
+  def send_confirmation_email
+    AppointmentConfirmationMailer.with(appointment: self).confirmation.deliver_later
   end
 end

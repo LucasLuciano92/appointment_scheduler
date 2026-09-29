@@ -1,0 +1,10 @@
+Tu turno está confirmado
+
+Hola <%= @customer.first_name %>, reservamos tu turno correctamente.
+
+Servicio: <%= @service.name %>
+Profesional: <%= "#{@staff_member.first_name} #{@staff_member.last_name}" %>
+Fecha y hora: <%= @formatted_starts_at %>
+Duración: <%= @service.duration_minutes %> minutos
+
+Si no podés asistir, cancelá el turno desde tu cuenta.
