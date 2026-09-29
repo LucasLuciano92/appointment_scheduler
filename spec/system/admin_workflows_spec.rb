@@ -1,5 +1,9 @@
 require "rails_helper"
 
+# Selenium Manager needs a writable, persistent cache to download and reuse the
+# browser and driver on machines where the user home directory is read-only.
+ENV["SE_CACHE_PATH"] ||= Rails.root.join("tmp/selenium").to_s
+
 RSpec.describe "Admin workflows", type: :system do
   include BookingSetup
 

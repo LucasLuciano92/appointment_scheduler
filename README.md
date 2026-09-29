@@ -110,10 +110,18 @@ bin/rails zeitwerk:check
 bin/brakeman --no-pager
 ```
 
-Las pruebas de sistema requieren Chrome y sus bibliotecas del sistema.
-Selenium Manager obtiene el driver; puede necesitar conexión la primera vez.
-Si Chrome no está en una ubicación habitual, indicar su ejecutable con
-`CHROME_BIN`.
+Las pruebas de sistema requieren Chrome y sus bibliotecas del sistema. Selenium
+Manager descarga y reutiliza ChromeDriver bajo `tmp/selenium`; la primera
+ejecución necesita conexión. Si Chrome no está instalado en una ubicación
+habitual, indicar la ruta del ejecutable con `CHROME_BIN`. Por ejemplo:
+
+```bash
+CHROME_BIN=/ruta/a/chrome bundle exec rspec spec/system
+```
+
+En Ubuntu 24.04, las dependencias mínimas que no vienen en instalaciones
+reducidas se pueden agregar con
+`sudo apt-get install --no-install-recommends libnss3 libasound2t64`.
 
 La suite usa RSpec y cubre modelos, restricciones SQL, permisos, sesiones,
 filtros, reservas concurrentes y flujos de navegador. GitHub Actions ejecuta
