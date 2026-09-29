@@ -1,4 +1,5 @@
 require "rails_helper"
+require "stringio"
 
 RSpec.describe "API V1", type: :request do
   include BookingSetup
@@ -130,6 +131,20 @@ RSpec.describe "API V1", type: :request do
 
       get "/api/v1/services/#{inactive.id}"
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "exposes an absolute image URL only when the service has an attachment" do
+      @service.image.attach(io: StringIO.new("image data"), filename: "haircut.png",
+        content_type: "image/png")
+
+      get "/api/v1/services/#{@service.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(json.dig("data", "image_url")).to start_with("http://www.example.com/rails/active_storage/")
+
+      @service.image.purge
+      get "/api/v1/services/#{@service.id}"
+      expect(json.dig("data", "image_url")).to be_nil
     end
 
     it "lists only active staff offerings for an active service" do

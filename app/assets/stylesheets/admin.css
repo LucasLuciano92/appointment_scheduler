@@ -221,6 +221,15 @@ textarea {
   max-width: 780px;
 }
 
+.service-image {
+  display: block;
+  width: min(100%, 420px);
+  max-height: 320px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;

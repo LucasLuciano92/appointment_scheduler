@@ -1,4 +1,5 @@
 require "rails_helper"
+require "stringio"
 
 RSpec.describe "Admin back office", type: :request do
   include BookingSetup
@@ -131,6 +132,23 @@ RSpec.describe "Admin back office", type: :request do
     delete admin_service_path(service)
     expect(response).to redirect_to(admin_services_path)
     expect(Service.exists?(service.id)).to be(false)
+  end
+
+  it "uploads displays and removes a service image" do
+    sign_in
+    image = Rack::Test::UploadedFile.new(StringIO.new("image data"), "image/png", false,
+      original_filename: "haircut.png")
+
+    patch admin_service_path(@service), params: { service: { image: image } }
+    expect(response).to redirect_to(admin_service_path(@service))
+    expect(@service.reload.image).to be_attached
+
+    get admin_service_path(@service)
+    expect(rendered_page).to have_css("img.service-image[alt='Imagen de Haircut']")
+
+    patch admin_service_path(@service), params: { service: { remove_image: "1" } }
+    expect(response).to redirect_to(admin_service_path(@service))
+    expect(@service.reload.image).not_to be_attached
   end
 
   it "creates updates and removes staff offers and availability" do

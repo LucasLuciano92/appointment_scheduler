@@ -9,6 +9,17 @@
       <%= form.label :description, "Descripción" %>
       <%= form.text_area :description, rows: 3 %>
     </div>
+    <div class="field">
+      <%= form.label :image, "Imagen" %>
+      <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp" %>
+      <small>JPEG, PNG o WebP de hasta 5 MB.</small>
+    </div>
+    <% if @service.image.attached? %>
+      <div class="field checkbox">
+        <%= check_box_tag "service[remove_image]", "1", false, id: "service_remove_image" %>
+        <%= label_tag "service_remove_image", "Eliminar la imagen actual" %>
+      </div>
+    <% end %>
     <div class="form-grid">
       <div class="field">
         <%= form.label :duration_minutes, "Duración (minutos)" %>

@@ -6,8 +6,9 @@ de una sola sede.
 ## Estado
 
 Implementadas: definición del dominio (etapa 1), modelos y base de datos
-(etapa 2), back-office (etapa 3) y API JSON (etapa 4). Active Storage y Action
-Mailer quedan para las próximas etapas. No hay un deploy publicado.
+(etapa 2), back-office (etapa 3), API JSON (etapa 4), imágenes de servicios con
+Active Storage y confirmaciones por email con Action Mailer (etapa 5). No hay un
+deploy publicado.
 
 ## Instalación y acceso
 
@@ -41,6 +42,8 @@ si una actualización incluye migraciones. `/up` es el endpoint de salud;
 | `BUSINESS_TIME_ZONE` | `America/Argentina/Buenos_Aires` |
 | `BUSINESS_CURRENCY` | `ARS` |
 | `API_ALLOWED_ORIGINS` | `http://localhost:5173` fuera de producción; vacío en producción |
+| `MAILER_FROM` | `turnos@example.com` |
+| `APP_HOST` | `example.com` en producción |
 
 Configurar estos valores antes de cargar disponibilidades. Cambiar la zona
 horaria modifica la interpretación de las franjas semanales. En producción se
@@ -72,6 +75,11 @@ Content-Type: application/json
 Los tokens duran 30 días, se guardan como hashes y se invalidan al cerrar sesión,
 cambiar la contraseña, desactivar la cuenta o cambiar su rol. No hay registro
 público de administradores.
+
+Los servicios pueden tener una imagen JPEG, PNG o WebP de hasta 5 MB. La API
+expone su URL en `image_url`. Cada reserva nueva encola un correo de confirmación
+para el cliente; la configuración SMTP de producción se describe en la
+[documentación de la etapa 5](docs/stage_5_storage_mailer.md).
 
 | Método y ruta | Acceso | Uso |
 | --- | --- | --- |
@@ -120,6 +128,7 @@ conexión.
 - [Etapa 2](docs/stage_2_models.md): decisiones de datos y ejemplo de consola.
 - [Etapa 3](docs/stage_3_back_office.md): operaciones, sesiones y concurrencia.
 - [Etapa 4](docs/stage_4_api.md): contrato JSON, autenticación y permisos.
+- [Etapa 5](docs/stage_5_storage_mailer.md): imágenes, emails y pruebas.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
 se registran en commits y cada etapa cierra con un PR.
