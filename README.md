@@ -7,7 +7,8 @@ de una sola sede.
 
 Implementadas: definición del dominio (etapa 1), modelos y base de datos
 (etapa 2), back-office (etapa 3), API JSON (etapa 4), imágenes de servicios con
-Active Storage y confirmaciones por email con Action Mailer (etapa 5). No hay un
+Active Storage y confirmaciones por email con Action Mailer (etapa 5), y
+controles de calidad y seguridad con RuboCop y Brakeman (etapa 6). No hay un
 deploy publicado.
 
 ## Instalación y acceso
@@ -107,7 +108,7 @@ bundle exec rspec --exclude-pattern 'spec/system/**/*_spec.rb'
 bundle exec rspec spec/system
 bin/rubocop
 bin/rails zeitwerk:check
-bin/brakeman --no-pager
+bin/brakeman --no-pager --exit-on-warn --exit-on-error
 ```
 
 Las pruebas de sistema requieren Chrome y sus bibliotecas del sistema. Selenium
@@ -137,6 +138,7 @@ conexión.
 - [Etapa 3](docs/stage_3_back_office.md): operaciones, sesiones y concurrencia.
 - [Etapa 4](docs/stage_4_api.md): contrato JSON, autenticación y permisos.
 - [Etapa 5](docs/stage_5_storage_mailer.md): imágenes, emails y pruebas.
+- [Etapa 6](docs/stage_6_quality_security.md): calidad, seguridad y CI.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
 se registran en commits y cada etapa cierra con un PR.
