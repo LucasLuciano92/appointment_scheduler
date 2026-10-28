@@ -171,6 +171,7 @@ conexión.
 - [Etapa 7](docs/stage_7_deploy.md): Docker, Kamal, HTTPS y operación.
 - [TP2 - Etapa 1](docs/tp2_stage_1_scope.md): auditoría del backend, alcance Angular, brechas y plan de integración.
 - [TP2 - Etapa 2](docs/tp2_stage_2_contract.md): contrato, arquitectura del frontend y entorno de demostración.
+- [TP2 - Etapa 3](docs/tp2_stage_3_checkpoint.md): autenticación, catálogo y primera reserva desde Angular.
 - [Contrato API del TP2](docs/tp2_api_contract.md): campos, permisos, respuestas, errores y ejemplos por endpoint.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
