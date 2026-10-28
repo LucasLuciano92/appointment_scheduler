@@ -1,6 +1,6 @@
 configured_origins = ENV.fetch(
   "API_ALLOWED_ORIGINS",
-  Rails.env.production? ? "" : "http://localhost:5173"
+  Rails.env.production? ? "" : "http://localhost:4200"
 ).split(",").map(&:strip).reject(&:blank?)
 
 if configured_origins.any?

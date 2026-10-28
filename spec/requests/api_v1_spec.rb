@@ -267,13 +267,13 @@ RSpec.describe "API V1", type: :request do
   describe "CORS" do
     it "allows the configured non-production frontend origin on API preflights" do
       options "/api/v1/services", headers: {
-        "Origin" => "http://localhost:5173",
+        "Origin" => "http://localhost:4200",
         "Access-Control-Request-Method" => "GET",
         "Access-Control-Request-Headers" => "Authorization"
       }
 
       expect(response).to have_http_status(:ok)
-      expect(response.headers["Access-Control-Allow-Origin"]).to eq("http://localhost:5173")
+      expect(response.headers["Access-Control-Allow-Origin"]).to eq("http://localhost:4200")
       expect(response.headers["Access-Control-Allow-Methods"]).to include("GET")
     end
   end
