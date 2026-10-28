@@ -12,6 +12,10 @@ controles de calidad y seguridad con RuboCop y Brakeman (etapa 6), y un deploy
 reproducible con Docker y Kamal (etapa 7). La URL pública queda pendiente de
 asignar hasta disponer del servidor y dominio definitivos.
 
+El TP2 continúa este backend con un frontend Angular separado. La revisión
+inicial, el alcance de integración y el plan de trabajo están documentados en
+[TP2 - Etapa 1](docs/tp2_stage_1_scope.md).
+
 ## Instalación y acceso
 
 Requisitos: Ruby 3.4.10, Bundler y herramientas de compilación para las gems
@@ -150,6 +154,7 @@ conexión.
 - [Etapa 5](docs/stage_5_storage_mailer.md): imágenes, emails y pruebas.
 - [Etapa 6](docs/stage_6_quality_security.md): calidad, seguridad y CI.
 - [Etapa 7](docs/stage_7_deploy.md): Docker, Kamal, HTTPS y operación.
+- [TP2 - Etapa 1](docs/tp2_stage_1_scope.md): auditoría del backend, alcance Angular, brechas y plan de integración.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
 se registran en commits y cada etapa cierra con un PR.
