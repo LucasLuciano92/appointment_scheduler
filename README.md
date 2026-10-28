@@ -41,13 +41,26 @@ la creación admite `ADMIN_FIRST_NAME`, `ADMIN_LAST_NAME`, `ADMIN_EMAIL` y
 si una actualización incluye migraciones. `/up` es el endpoint de salud;
 `bin/rails console` permite consultar los modelos.
 
+Para preparar un catálogo y cuentas de demostración del TP2 sin guardar
+contraseñas en el repositorio:
+
+```powershell
+$env:DEMO_ADMIN_PASSWORD = "admin-pass-123"
+$env:DEMO_CUSTOMER_PASSWORD = "customer-pass-123"
+bundle exec rails demo:setup
+```
+
+El comando es idempotente, se niega a ejecutarse en producción y crea
+`admin.demo@example.com`, `cliente.demo@example.com`, un servicio, una
+profesional, su oferta y disponibilidad semanal.
+
 ## Configuración
 
 | Variable | Valor predeterminado |
 | --- | --- |
 | `BUSINESS_TIME_ZONE` | `America/Argentina/Buenos_Aires` |
 | `BUSINESS_CURRENCY` | `ARS` |
-| `API_ALLOWED_ORIGINS` | `http://localhost:5173` fuera de producción; vacío en producción |
+| `API_ALLOWED_ORIGINS` | `http://localhost:4200` fuera de producción; vacío en producción |
 | `MAILER_FROM` | `turnos@example.com` |
 | `APP_HOST` | `example.com` en producción |
 
@@ -113,7 +126,9 @@ para el cliente; la configuración SMTP de producción se describe en la
 Los cuerpos de escritura agrupan atributos bajo `user`, `session` o
 `appointment`. Las respuestas exitosas usan `data`; los errores usan `error`
 con `code`, `message` y, para validaciones, `details`. El contrato completo y
-ejemplos están en [la documentación de la etapa 4](docs/stage_4_api.md).
+ejemplos del TP1 están en [la documentación de la etapa 4](docs/stage_4_api.md).
+El contrato exhaustivo utilizado por Angular está en
+[el contrato de API del TP2](docs/tp2_api_contract.md).
 
 ## Verificación
 
@@ -155,6 +170,8 @@ conexión.
 - [Etapa 6](docs/stage_6_quality_security.md): calidad, seguridad y CI.
 - [Etapa 7](docs/stage_7_deploy.md): Docker, Kamal, HTTPS y operación.
 - [TP2 - Etapa 1](docs/tp2_stage_1_scope.md): auditoría del backend, alcance Angular, brechas y plan de integración.
+- [TP2 - Etapa 2](docs/tp2_stage_2_contract.md): contrato, arquitectura del frontend y entorno de demostración.
+- [Contrato API del TP2](docs/tp2_api_contract.md): campos, permisos, respuestas, errores y ejemplos por endpoint.
 
 Los comentarios del código explican decisiones que no son evidentes. Los cambios
 se registran en commits y cada etapa cierra con un PR.

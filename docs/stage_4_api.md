@@ -122,7 +122,7 @@ otros clientes.
 
 CORS se limita a los orígenes indicados en `API_ALLOWED_ORIGINS`, separados por
 comas. Fuera de producción el valor predeterminado es
-`http://localhost:5173`. En producción no se habilita ningún origen de manera
+`http://localhost:4200`. En producción no se habilita ningún origen de manera
 implícita: el deploy debe definir la URL exacta del frontend.
 
 ## Verificación
